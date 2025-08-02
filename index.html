@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Mirror</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #mirror {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            transform: scaleX(-1); /* Essential left-right flip for true mirror effect */
+        }
+        #error {
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <video id="mirror" autoplay playsinline></video>
+    <div id="error">카메라 접근에 실패했습니다. 권한을 확인하세요!</div>
+
+    <script>
+        const video = document.getElementById('mirror');
+        const errorDiv = document.getElementById('error');
+
+        async function startMirror() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                errorDiv.style.display = 'block';
+                video.style.display = 'none';
+            }
+        }
+
+        startMirror();
+    </script>
+</body>
+</html>
