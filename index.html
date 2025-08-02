@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Mirror</title>
+    <title>Reversed Mirror</title>
     <style>
         body {
             margin: 0;
@@ -14,12 +14,29 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
         #mirror {
             width: 100vw;
             height: 100vh;
             object-fit: cover;
-            transform: scaleX(-1); /* Essential left-right flip for true mirror effect */
+            /* No flip by default - your "reversed" starting point */
+        }
+        #toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 10;
+        }
+        #toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
         #error {
             color: white;
@@ -31,11 +48,14 @@
 </head>
 <body>
     <video id="mirror" autoplay playsinline></video>
+    <button id="toggle-btn">거울 모드 전환 (현재: 반전 OFF)</button>
     <div id="error">카메라 접근에 실패했습니다. 권한을 확인하세요!</div>
 
     <script>
         const video = document.getElementById('mirror');
+        const toggleBtn = document.getElementById('toggle-btn');
         const errorDiv = document.getElementById('error');
+        let isFlipped = false; // Start unflipped - your requested default
 
         async function startMirror() {
             try {
@@ -48,6 +68,13 @@
             }
         }
 
+        function toggleFlip() {
+            isFlipped = !isFlipped;
+            video.style.transform = isFlipped ? 'scaleX(-1)' : 'none';
+            toggleBtn.textContent = `거울 모드 전환 (현재: 반전 ${isFlipped ? 'ON' : 'OFF'})`;
+        }
+
+        toggleBtn.addEventListener('click', toggleFlip);
         startMirror();
     </script>
 </body>
